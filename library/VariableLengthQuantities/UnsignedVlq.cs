@@ -1,7 +1,7 @@
 using System;
-using InvertedTomato.Serialization.Helium.Buffers;
+using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 
-namespace InvertedTomato.Serialization.Helium.VariableLengthQuantities
+namespace InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities
 {
     public static class UnsignedVlq
     {

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace InvertedTomato.Serialization.Helium.Buffers
+namespace InvertedTomato.Serialization.HeliumSerialization.Buffers
 {
     public class DecodeBuffer
     {

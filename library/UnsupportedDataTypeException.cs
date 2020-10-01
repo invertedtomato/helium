@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace InvertedTomato.Serialization.Helium
+namespace InvertedTomato.Serialization.HeliumSerialization
 {
     public class UnsupportedDataTypeException : Exception
     {

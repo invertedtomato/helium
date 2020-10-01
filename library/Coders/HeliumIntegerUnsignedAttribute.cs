@@ -1,9 +1,9 @@
 using System;
 using System.Reflection;
-using InvertedTomato.Serialization.Helium.Buffers;
-using InvertedTomato.Serialization.Helium.VariableLengthQuantities;
+using InvertedTomato.Serialization.HeliumSerialization.Buffers;
+using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
-namespace InvertedTomato.Serialization.Helium.Coders
+namespace InvertedTomato.Serialization.HeliumSerialization
 {
     public class HeliumIntegerUnsignedAttribute : HeliumAttribute
     {
@@ -25,7 +25,7 @@ namespace InvertedTomato.Serialization.Helium.Coders
             Increment = increment;
         }
 
-        public override void Prepare(Type underlyingType)
+        public override void Prepare(Type underlyingType) // TODO: correctly detect and support nullables
         {
             // If enum, unwrap
             var typeInfo = underlyingType.GetTypeInfo();
@@ -35,10 +35,9 @@ namespace InvertedTomato.Serialization.Helium.Coders
             }
 
             // Error if unsupported data type
-            if (underlyingType != typeof(Byte) &&
-                underlyingType != typeof(UInt16) &&
+            if (underlyingType != typeof(UInt16) &&
                 underlyingType != typeof(UInt32) &&
-                underlyingType != typeof(UInt64))
+                underlyingType != typeof(UInt64)) // underlyingType != typeof(Byte) &&
             {
                 throw new UnsupportedDataTypeException();
             }
@@ -48,51 +47,37 @@ namespace InvertedTomato.Serialization.Helium.Coders
 
         public override EncodeBuffer Encode(Object value)
         {
-            throw new NotImplementedException("Missing nullable, min and increment");
-            if (UnderlyingType == typeof(UInt64))
+            if (value == null && Nullable)
             {
-                return new EncodeBuffer(UnsignedVlq.Encode((UInt64)value));
+                return EncodeBuffer.Zero;
             }
-            else if (UnderlyingType == typeof(UInt32))
+
+            var v = (UInt64)value;
+            v -= Minimum;
+            v /= Increment;
+            if (Nullable)
             {
-                return new EncodeBuffer(UnsignedVlq.Encode((UInt32)value));
+                v++;
             }
-            else if (UnderlyingType == typeof(UInt16))
-            {
-                return new EncodeBuffer(UnsignedVlq.Encode((UInt16)value));
-            }
-            else if (UnderlyingType == typeof(Byte))
-            {
-                return new EncodeBuffer(new ArraySegment<Byte>(new Byte[] { (Byte) value }));
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+
+            return new EncodeBuffer(UnsignedVlq.Encode(v));
         }
 
         public override Object Decode(DecodeBuffer input)
         {
-            if (UnderlyingType == typeof(UInt64))
+            var v = (UInt64)UnsignedVlq.Decode(input);
+            if (Nullable)
             {
-                return UnsignedVlq.Decode(input);
+                if (v == 0)
+                {
+                    return null;
+                }
+                v--;
             }
-            else if (UnderlyingType == typeof(UInt32))
-            {
-                return (UInt32)UnsignedVlq.Decode(input);
-            }
-            else if (UnderlyingType == typeof(UInt16))
-            {
-                return (UInt16)UnsignedVlq.Decode(input);
-            }
-            else if (UnderlyingType == typeof(Byte))
-            {
-                return input.ReadByte();
-            }
-            else
-            {
-                throw new InvalidOperationException();
-            }
+            v *= Increment;
+            v += Minimum;
+
+            return Convert.ChangeType(v, UnderlyingType);
         }
     }
 }

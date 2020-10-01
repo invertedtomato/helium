@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using InvertedTomato.Serialization.Helium.VariableLengthQuantities;
+using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
-namespace InvertedTomato.Serialization.Helium.Buffers
+namespace InvertedTomato.Serialization.HeliumSerialization.Buffers
 {
     public struct EncodeBuffer
     {

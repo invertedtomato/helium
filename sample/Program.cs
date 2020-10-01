@@ -1,6 +1,7 @@
 ﻿using System;
+using InvertedTomato.Serialization.HeliumSerialization;
 
-namespace sample
+namespace InvertedTomato.Serialization.HeliumSerialization.Sample
 {
     class Program
     {
@@ -8,13 +9,11 @@ namespace sample
         {
             var encoded = Helium.Serialize(new Record()
             {
-                A = "Lala",
-                B = 42,
-                C = new Record()
+                A = 42,
+                B = new Record()
                 {
-                    A = "La",
-                    B = 72,
-                    C = null
+                    A = 72,
+                    B = null
                 }
             });
 
@@ -26,13 +25,10 @@ namespace sample
 
     class Record
     {
-        [HeliumString(0, false)]
-        public String A { get; set; }
-
-        [HeliumIntegerSigned(1, false, 40, 5, 100)]
-        public Int32 B { get; set; }
+        [HeliumIntegerUnsigned(1, false, 40, 5)]
+        public UInt32 A { get; set; }
 
         [HeliumClass(2, true)]
-        public Record C { get; set; }
+        public Record B { get; set; }
     }
 }

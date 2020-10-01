@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
 using System.Collections.Generic;
-using InvertedTomato.Serialization.Helium.Buffers;
-using InvertedTomato.Serialization.Helium.VariableLengthQuantities;
+using InvertedTomato.Serialization.HeliumSerialization.Buffers;
+using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
-namespace InvertedTomato.Serialization.Helium.Coders
+namespace InvertedTomato.Serialization.HeliumSerialization
 {
     public class HeliumClassAttribute : HeliumAttribute
     {
@@ -17,9 +17,7 @@ namespace InvertedTomato.Serialization.Helium.Coders
             public HeliumAttribute Coder { get; set; }
         }
 
-        public HeliumClassAttribute(Byte index, Boolean nullable) : base(index, nullable)
-        {
-        }
+        public HeliumClassAttribute(Byte index, Boolean nullable) : base(index, nullable) { }
 
         public override void Prepare(Type underlyingType)
         {
@@ -34,8 +32,10 @@ namespace InvertedTomato.Serialization.Helium.Coders
             var records = new Record[Byte.MaxValue];
 
             // Find all properties decorated with LightWeightProperty attribute
+            var properties=underlyingType.GetRuntimeFields();
+            
             var fieldCount = -1;
-            foreach (var property in underlyingType.GetRuntimeFields())
+            foreach (var property in properties) 
             {
                 // Get property attribute which tells us the properties' index
                 var coder = property.GetCustomAttribute<HeliumAttribute>(true);
@@ -104,7 +104,7 @@ namespace InvertedTomato.Serialization.Helium.Coders
 
             var output = new EncodeBuffer();
 
-            for (Byte i = 0; i <= Records.Length; i++)
+            for (Byte i = 0; i < Records.Length; i++)
             {
                 var record = Records[i];
 
@@ -141,19 +141,20 @@ namespace InvertedTomato.Serialization.Helium.Coders
             var header = (Int32)UnsignedVlq.Decode(input);
 
             // Handle nulls
-            if (header == 0)
+            if (Nullable)
             {
-                return null;
+                if (header == 0)
+                {
+                    return null;
+                }
+                header--;
             }
-
-            // Determine length
-            var length = header - 1;
 
             // Instantiate output
             var output = Activator.CreateInstance(UnderlyingType);
 
             // Extract an inner buffer so that if fields are added to the class in the future we ignore them, being backwards compatible
-            var innerInput = input.Extract(length);
+            var innerInput = input.Extract(header);
 
             // Isolate bytes for body
             foreach (var record in Records)

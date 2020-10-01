@@ -1,7 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>InvertedTomato.HeliumSerialization.Library</AssemblyName>
+    <RootNamespace>InvertedTomato.Serialization.HeliumSerialization</RootNamespace>
+    <PackageId>InvertedTomato.HeliumSerialization</PackageId>
+    <Title>InvertedTomato.HeliumSerialization</Title>
+    <Authors>Inverted Tomato</Authors>
+    <Description>Extremely compact serialization for when size matters more than functionality. Produces output smaller than JSON, ProtoBuf and MsgPack. </Description>
+    <PackageVersion>0.1.0</PackageVersion>
+    <PackageProjectUrl>https://github.com/invertedtomato/helium</PackageProjectUrl>
+    <License>https://raw.githubusercontent.com/invertedtomato/helium/master/LICENSE</License>
+    <RepositoryUrl>https://github.com/invertedtomato/helium</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>serialization,serialisation,compact,protobuf,msgpack</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 using System;
-using InvertedTomato.Serialization.Helium.Buffers;
+using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 
-namespace InvertedTomato.Serialization.Helium.Coders
+namespace InvertedTomato.Serialization.HeliumSerialization
 {
     public class Helium
     {
