@@ -6,7 +6,7 @@ using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
-    public class HeliumClassAttribute : HeliumAttribute
+    public class HeliumClass : HeliumCoder
     {
         private Record[] Records { get; set; }
         private Type UnderlyingType { get; set; }
@@ -14,10 +14,10 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         private class Record
         {
             public FieldInfo Field { get; set; }
-            public HeliumAttribute Coder { get; set; }
+            public HeliumCoder Coder { get; set; }
         }
 
-        public HeliumClassAttribute(Byte index, Boolean nullable) : base(index, nullable) { }
+        public HeliumClass(Byte index, Boolean nullable) : base(index, nullable) { }
 
         public override void Prepare(Type underlyingType)
         {
@@ -38,7 +38,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             foreach (var property in properties) 
             {
                 // Get property attribute which tells us the properties' index
-                var coder = property.GetCustomAttribute<HeliumAttribute>(true);
+                var coder = property.GetCustomAttribute<HeliumCoder>(true);
                 if (null == coder)
                 {
                     // No attribute found, skip

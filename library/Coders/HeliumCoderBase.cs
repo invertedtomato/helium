@@ -4,12 +4,12 @@ using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
     [AttributeUsage(AttributeTargets.Field)]
-    public abstract class HeliumAttribute : Attribute
+    public abstract class HeliumCoder : Attribute
     {
         public Byte Index { get; }
         protected Boolean IsNullable { get; }
 
-        public HeliumAttribute(Byte index, Boolean nullable)
+        public HeliumCoder(Byte index, Boolean nullable)
         {
             Index = index;
             IsNullable = nullable;

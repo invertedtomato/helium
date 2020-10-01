@@ -5,27 +5,27 @@ using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
-    public class HeliumIntegerUnsignedAttribute : HeliumAttribute
+    public class HeliumIntegerUnsigned : HeliumCoder
     {
         protected UInt64 Minimum { get; } = UInt64.MinValue;
         protected UInt64 Increment { get; } = 1;
 
         private Type UnderlyingType { get; set; }
 
-        public HeliumIntegerUnsignedAttribute(Byte index, Boolean nullable) : base(index, nullable)
+        public HeliumIntegerUnsigned(Byte index, Boolean nullable) : base(index, nullable)
         {
         }
-        public HeliumIntegerUnsignedAttribute(Byte index, Boolean nullable, UInt64 minimum) : base(index, nullable)
+        public HeliumIntegerUnsigned(Byte index, Boolean nullable, UInt64 minimum) : base(index, nullable)
         {
             Minimum = minimum;
         }
-        public HeliumIntegerUnsignedAttribute(Byte index, Boolean nullable, UInt64 minimum, UInt64 increment) : base(index, nullable)
+        public HeliumIntegerUnsigned(Byte index, Boolean nullable, UInt64 minimum, UInt64 increment) : base(index, nullable)
         {
             Minimum = minimum;
             Increment = increment;
         }
 
-        public override void Prepare(Type underlyingType) // TODO: correctly detect and support nullables
+        public override void Prepare(Type underlyingType)
         {
             // If enum, unwrap
             var typeInfo = underlyingType.GetTypeInfo();

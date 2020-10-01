@@ -15,7 +15,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 #endif
 
             // Assume root is a class
-            var coder = new HeliumClassAttribute(0, false);
+            var coder = new HeliumClass(0, false);
             coder.Prepare(typeof(T));
 
             // Invoke coder
@@ -41,7 +41,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 #endif
 
             // Assume root is a class
-            var coder = new HeliumClassAttribute(0, false);
+            var coder = new HeliumClass(0, false);
             coder.Prepare(typeof(T));
 
             // Invoke root serializer
