@@ -37,9 +37,12 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             // Error if unsupported data type
             if (underlyingType != typeof(UInt16) &&
                 underlyingType != typeof(UInt32) &&
-                underlyingType != typeof(UInt64)) // underlyingType != typeof(Byte) &&
-            {
-                throw new UnsupportedDataTypeException();
+                underlyingType != typeof(UInt64) &&
+                underlyingType != typeof(UInt16?) &&
+                underlyingType != typeof(UInt32?) &&
+                underlyingType != typeof(UInt64?)) {
+           
+                throw new UnsupportedDataTypeException($"IntegerUnsigned does not support {underlyingType}.");
             }
 
             UnderlyingType = underlyingType;
@@ -47,15 +50,15 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
         public override EncodeBuffer Encode(Object value)
         {
-            if (value == null && Nullable)
+            if (value == null && IsNullable)
             {
-                return EncodeBuffer.Zero;
+                return Precomputed.Zero;
             }
 
-            var v = (UInt64)value;
+            var v = Convert.ToUInt64(value);
             v -= Minimum;
             v /= Increment;
-            if (Nullable)
+            if (IsNullable)
             {
                 v++;
             }
@@ -66,7 +69,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         public override Object Decode(DecodeBuffer input)
         {
             var v = (UInt64)UnsignedVlq.Decode(input);
-            if (Nullable)
+            if (IsNullable)
             {
                 if (v == 0)
                 {

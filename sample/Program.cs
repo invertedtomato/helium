@@ -10,25 +10,32 @@ namespace InvertedTomato.Serialization.HeliumSerialization.Sample
             var encoded = Helium.Serialize(new Record()
             {
                 A = 42,
-                B = new Record()
+                B = new RecordB()
                 {
-                    A = 72,
-                    B = null
+                    A = 72
                 }
             });
 
             
             var decoded = Helium.Deserialize<Record>(encoded);
+
+            Console.WriteLine($"A={decoded.A}, B.A={decoded.B.A}");
         }
     }
 
 
     class Record
     {
-        [HeliumIntegerUnsigned(1, false, 40, 5)]
-        public UInt32 A { get; set; }
+        [HeliumIntegerUnsigned(0, false, 40, 5)]
+        public UInt32 A;
 
-        [HeliumClass(2, true)]
-        public Record B { get; set; }
+        [HeliumClass(1, true)]
+        public RecordB B;
+    }
+
+    class RecordB
+    {
+        [HeliumIntegerUnsigned(0, false, 40, 5)]
+        public UInt32 A;
     }
 }

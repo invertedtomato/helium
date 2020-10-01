@@ -21,19 +21,8 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             // Invoke coder
             var output = coder.Encode(value);
 
-            // Allocate output buffer
-            var buffer = new Byte[output.TotalLength];
-            var offset = 0;
-
-            // Squash notes tree into stream
-            for (var i = output.Offset; i < output.Offset + output.Count; i++)
-            {
-                var payload = output.Underlying[i];
-                Buffer.BlockCopy(payload.Array, payload.Offset, buffer, offset, payload.Count);
-                offset += payload.Count;
-            }
-
-            return buffer;
+            // Flattern into to byte array
+            return output.Flattern();
         }
 
         public T Decode<T>(Byte[] input)
@@ -53,6 +42,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
             // Assume root is a class
             var coder = new HeliumClassAttribute(0, false);
+            coder.Prepare(typeof(T));
 
             // Invoke root serializer
             var value = coder.Decode(new DecodeBuffer(input));

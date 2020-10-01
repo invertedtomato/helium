@@ -6,9 +6,6 @@ namespace InvertedTomato.Serialization.HeliumSerialization.Buffers
 {
     public struct EncodeBuffer
     {
-        public static readonly EncodeBuffer Zero = new EncodeBuffer(UnsignedVlq.Encode(0));
-        public static readonly EncodeBuffer One = new EncodeBuffer(UnsignedVlq.Encode(1));
-
         private const Int32 InitialSize = 8;
 
         public ArraySegment<Byte>[] Underlying;
@@ -100,6 +97,23 @@ namespace InvertedTomato.Serialization.HeliumSerialization.Buffers
         public override String ToString()
         {
             return $"count={Count},length={TotalLength}";
+        }
+
+        public Byte[] Flattern()
+        {
+            // Allocate output buffer
+            var buffer = new Byte[TotalLength];
+            var offset = 0;
+
+            // Squash notes tree into stream
+            for (var i = Offset; i < Offset + Count; i++)
+            {
+                var payload = Underlying[i];
+                Buffer.BlockCopy(payload.Array, payload.Offset, buffer, offset, payload.Count);
+                offset += payload.Count;
+            }
+
+            return buffer;
         }
     }
 }

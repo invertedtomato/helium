@@ -95,11 +95,11 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             // Handle nulls
             if (null == value)
             {
-                if (!Nullable)
+                if (!IsNullable)
                 {
                     throw new UnexpectedNullValueException();
                 }
-                return EncodeBuffer.Zero;
+                return Precomputed.Zero;
             }
 
             var output = new EncodeBuffer();
@@ -117,7 +117,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
             // Increment length if nullable, to allow space for null representation
             var length = (UInt64)output.TotalLength;
-            if (Nullable)
+            if (IsNullable)
             {
                 length++;
             }
@@ -141,7 +141,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             var header = (Int32)UnsignedVlq.Decode(input);
 
             // Handle nulls
-            if (Nullable)
+            if (IsNullable)
             {
                 if (header == 0)
                 {
