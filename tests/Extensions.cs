@@ -41,10 +41,14 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             return output;
         }
 
-
         public static String ToHexString(this EncodeBuffer target, Int32 minBytes = 0)
         {
             return target.Flattern().ToHexString(minBytes);
+        }
+
+        public static String ToHexString(this ArraySegment<Byte> target, Int32 minBytes = 0)
+        {
+            return target.ToArray().ToHexString(minBytes);
         }
     }
 }

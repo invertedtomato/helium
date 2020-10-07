@@ -8,69 +8,60 @@ namespace InvertedTomato.Serialization.HeliumSerialization
     public class HeliumIntegerUnsignedTests
     {
         [Fact]
-        public void EncodeSimple()
+        public void EncodeMin()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, false, 1, 0);
             coder.Prepare(typeof(UInt32));
-            var encoded = coder.Encode((UInt32)5);
+            var encoded = coder.Encode(UnsignedVlq.MinValue);
 
-            Assert.Equal("05", encoded.ToHexString());
+            Assert.Equal(UnsignedVlq.Encode(UnsignedVlq.MinValue).ToHexString(), encoded.ToHexString());
         }
 
         [Fact]
         public void EncodeMax()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, false, 1, 0);
             coder.Prepare(typeof(UInt64));
             var encoded = coder.Encode(UnsignedVlq.MaxValue);
 
-            Assert.Equal("FEFEFEFEFEFEFEFEFE00", encoded.ToHexString());
+            Assert.Equal(UnsignedVlq.Encode(UnsignedVlq.MaxValue).ToHexString(), encoded.ToHexString());
         }
 
         [Fact]
-        public void EncodeCouldBeNullable()
+        public void EncodeNullableMin()
         {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
-            coder.Prepare(typeof(UInt32));
-            var encoded = coder.Encode((UInt32)5);
-
-            Assert.Equal("06", encoded.ToHexString());
-        }
-
-        [Fact]
-        public void EncodeNullable()
-        {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
             coder.Prepare(typeof(UInt32?));
-            var encoded = coder.Encode((UInt32?)5);
+            var encoded = coder.Encode((UInt32?)UnsignedVlq.MinValue);
 
-            Assert.Equal("06", encoded.ToHexString());
+            Assert.Equal(UnsignedVlq.Encode(UnsignedVlq.MinValue+1).ToHexString(), encoded.ToHexString());
         }
 
         [Fact]
-        public void EncodeNull()
+        public void EncodeNullableMax()
         {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
+            coder.Prepare(typeof(UInt64?));
+            var encoded = coder.Encode(UnsignedVlq.MaxValue-1);
+
+            Assert.Equal(UnsignedVlq.Encode(UnsignedVlq.MaxValue).ToHexString(), encoded.ToHexString());
+        }
+
+        [Fact]
+        public void EncodeNullableNull()
+        {
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
             coder.Prepare(typeof(UInt32?));
-            var encoded = coder.Encode(null);
+            var encoded = coder.Encode((UInt32?)null);
 
-            Assert.Equal("00", encoded.ToHexString());
+            Assert.Equal(UnsignedVlq.Encode(UnsignedVlq.MinValue).ToHexString(), encoded.ToHexString());
         }
 
-        [Fact]
-        public void EncodeMinimum()
-        {
-            var coder = new HeliumIntegerUnsigned(0, false, 1, 1);
-            coder.Prepare(typeof(UInt32));
-            var encoded = coder.Encode((UInt32)5);
-
-            Assert.Equal("04", encoded.ToHexString());
-        }
 
         [Fact]
         public void EncodeIncrement()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 0);
             coder.Prepare(typeof(UInt32));
             var encoded = coder.Encode((UInt32)111);
 
@@ -80,7 +71,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         [Fact]
         public void EncodeMinimumIncrement1()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 1, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 1);
             coder.Prepare(typeof(UInt32));
             var encoded = coder.Encode((UInt32)111);
 
@@ -90,7 +81,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         [Fact]
         public void EncodeMinimumIncrement2()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 20);
             coder.Prepare(typeof(UInt32));
             var encoded = coder.Encode((UInt32)152);
 
@@ -101,7 +92,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         public void PrepareUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
-                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                var coder = new HeliumIntegerUnsigned(0, false, 10, 20);
                 coder.Prepare(typeof(String));
             });
         }
@@ -110,7 +101,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         public void EncodeUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
-                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                var coder = new HeliumIntegerUnsigned(0, false, 10, 20);
                 coder.Prepare(typeof(UInt32));
                 var encoded = coder.Encode("asdf");
             });
@@ -121,7 +112,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         public void DecodeUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
-                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                var coder = new HeliumIntegerUnsigned(0, false, 10, 20);
                 coder.Prepare(typeof(UInt32));
                 var decoded = coder.Decode(new DecodeBuffer(  new Byte[] { 0,0,0}));
             });
@@ -129,71 +120,52 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void DecodeSimple()
+        public void DecodeMin()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, false, 1, 0);
             coder.Prepare(typeof(UInt32));
-            var decoded = coder.Decode(new DecodeBuffer(new byte[]{
-                0x05
-            }));
+            var decoded = coder.Decode(new DecodeBuffer(UnsignedVlq.Encode(0).ToArray()));
 
-            Assert.Equal((UInt32)5, decoded);
+            Assert.Equal((UInt32)0, decoded);
         }
 
 
         [Fact]
         public void DecodeMax()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, false, 1, 0);
             coder.Prepare(typeof(UInt64));
-            var decoded = coder.Decode(new DecodeBuffer(new byte[]{
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0xFE,
-                0x00
-            }));
+            var decoded = coder.Decode(new DecodeBuffer(UnsignedVlq.Encode(UnsignedVlq.MaxValue).ToArray()));
 
             Assert.Equal(UnsignedVlq.MaxValue, decoded);
         }
 
         [Fact]
-        public void DecodeCouldBeNullable()
+        public void DecodeNullableMin()
         {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
-            coder.Prepare(typeof(UInt32));
-            var decoded = coder.Decode(new DecodeBuffer(new byte[]{
-                0x06
-            }));
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
+            coder.Prepare(typeof(UInt32?));
+            var decoded = coder.Decode(new DecodeBuffer(UnsignedVlq.Encode(UnsignedVlq.MinValue).ToArray()));
 
-            Assert.Equal((UInt32)5, decoded);
+            Assert.Equal(UnsignedVlq.MinValue+1, decoded);
         }
 
         [Fact]
-        public void DecodeNullable()
+        public void DecodeNullableMax()
         {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
             coder.Prepare(typeof(UInt32?));
-            var decoded = coder.Decode(new DecodeBuffer(new byte[]{
-                0x06
-            }));
+            var decoded = coder.Decode(new DecodeBuffer(UnsignedVlq.Encode(UnsignedVlq.MaxValue).ToArray()));
 
-            Assert.Equal((UInt32?)5, decoded);
+            Assert.Equal(UnsignedVlq.MaxValue -1, decoded);
         }
 
         [Fact]
-        public void DecodeNull()
+        public void DecodeNullableNull()
         {
-            var coder = new HeliumIntegerUnsigned(0, true, 0, 1);
+            var coder = new HeliumIntegerUnsigned(0, true, 1, 0);
             coder.Prepare(typeof(UInt32?));
-            var decoded = coder.Decode(new DecodeBuffer(new byte[]{
-                0x00
-            }));
+            var decoded = coder.Decode(new DecodeBuffer(UnsignedVlq.Encode(0).ToArray()));
 
             Assert.Equal((UInt32?)null, decoded);
         }
@@ -213,7 +185,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         [Fact]
         public void DecodeIncrement()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 0, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 0);
             coder.Prepare(typeof(UInt32));
             var decoded = coder.Decode(new DecodeBuffer(new byte[]{
                 0x0B
@@ -225,7 +197,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         [Fact]
         public void DecodeMinimumIncrement1()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 1, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 1);
             coder.Prepare(typeof(UInt32));
             var decoded = coder.Decode(new DecodeBuffer(new byte[]{
                 0x0B
@@ -237,7 +209,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         [Fact]
         public void DecodeMinimumIncrement2()
         {
-            var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+            var coder = new HeliumIntegerUnsigned(0, false, 10, 20);
             coder.Prepare(typeof(UInt32));
             var decoded = coder.Decode(new DecodeBuffer(new byte[]{
                 0x0D

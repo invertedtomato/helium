@@ -1,28 +1,22 @@
-using System;
+﻿using System;
 using System.Reflection;
 using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
-    public class HeliumIntegerUnsigned : HeliumCoder
+    public class HeliumIntegerSigned : HeliumCoder
     {
-        protected UInt64 Minimum { get; } = UInt64.MinValue;
-        protected UInt64 Increment { get; } = 1;
+        protected Int64 Increment { get; } = 1;
 
         private Type UnderlyingType { get; set; }
 
-        public HeliumIntegerUnsigned(Byte index, Boolean nullable) : base(index, nullable)
+        public HeliumIntegerSigned(Byte index, Boolean nullable) : base(index, nullable)
         {
         }
-        public HeliumIntegerUnsigned(Byte index, Boolean nullable, UInt64 increment) : base(index, nullable)
+        public HeliumIntegerSigned(Byte index, Boolean nullable, Int64 increment) : base(index, nullable)
         {
             Increment = increment;
-        }
-        public HeliumIntegerUnsigned(Byte index, Boolean nullable, UInt64 increment, UInt64 minimum) : base(index, nullable)
-        {
-            Increment = increment;
-            Minimum = minimum;
         }
 
         public override void Prepare(Type underlyingType)
@@ -35,14 +29,15 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             }
 
             // Error if unsupported data type
-            if (underlyingType != typeof(UInt16) &&
-                underlyingType != typeof(UInt32) &&
-                underlyingType != typeof(UInt64) &&
-                underlyingType != typeof(UInt16?) &&
-                underlyingType != typeof(UInt32?) &&
-                underlyingType != typeof(UInt64?)) {
-           
-                throw new UnsupportedDataTypeException($"IntegerUnsigned does not support {underlyingType}.");
+            if (underlyingType != typeof(Int16) &&
+                underlyingType != typeof(Int32) &&
+                underlyingType != typeof(Int64) &&
+                underlyingType != typeof(Int16?) &&
+                underlyingType != typeof(Int32?) &&
+                underlyingType != typeof(Int64?))
+            {
+
+                throw new UnsupportedDataTypeException($"IntegerSigned does not support {underlyingType}.");
             }
 
             UnderlyingType = underlyingType;
@@ -55,20 +50,19 @@ namespace InvertedTomato.Serialization.HeliumSerialization
                 return Precomputed.Zero;
             }
 
-            var v = Convert.ToUInt64(value);
-            v -= Minimum;
+            var v = Convert.ToInt64(value);
             v /= Increment;
             if (IsNullable)
             {
                 v++;
             }
 
-            return new EncodeBuffer(UnsignedVlq.Encode(v));
+            return new EncodeBuffer(SignedVlq.Encode(v));
         }
 
         public override Object Decode(DecodeBuffer input)
         {
-            var v = UnsignedVlq.Decode(input);
+            var v = SignedVlq.Decode(input);
             if (IsNullable)
             {
                 if (v == 0)
@@ -78,7 +72,6 @@ namespace InvertedTomato.Serialization.HeliumSerialization
                 v--;
             }
             v *= Increment;
-            v += Minimum;
 
             return Convert.ChangeType(v, UnderlyingType);
         }

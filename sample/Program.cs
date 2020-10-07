@@ -26,7 +26,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization.Sample
 
     class Record
     {
-        [HeliumIntegerUnsigned(0, false, 40, 5)]
+        [HeliumIntegerUnsigned(0, false, 5, 40)]
         public UInt32 A;
 
         [HeliumClass(1, true)]
@@ -35,7 +35,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization.Sample
 
     class RecordB
     {
-        [HeliumIntegerUnsigned(0, false, 40, 5)]
+        [HeliumIntegerUnsigned(0, false, 5, 40)]
         public UInt32 A;
     }
 }
