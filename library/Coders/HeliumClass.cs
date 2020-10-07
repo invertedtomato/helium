@@ -1,12 +1,11 @@
 using System;
 using System.Reflection;
-using System.Collections.Generic;
 using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
-    public class HeliumClass : HeliumCoder
+    public class HeliumMap : HeliumCoder
     {
         private Record[] Records { get; set; }
         private Type UnderlyingType { get; set; }
@@ -17,7 +16,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             public HeliumCoder Coder { get; set; }
         }
 
-        public HeliumClass(Byte index, Boolean nullable) : base(index, nullable) { }
+        public HeliumMap(Byte index, Boolean nullable) : base(index, nullable) { }
 
         public override void Prepare(Type underlyingType)
         {
