@@ -8,5 +8,6 @@ namespace InvertedTomato.Serialization.HeliumSerialization
     {
         public static readonly EncodeBuffer Zero = new EncodeBuffer(UnsignedVlq.Encode(0));
         public static readonly EncodeBuffer One = new EncodeBuffer(UnsignedVlq.Encode(1));
+        public static readonly EncodeBuffer Two = new EncodeBuffer(UnsignedVlq.Encode(2));
     }
 }
