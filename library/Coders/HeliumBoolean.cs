@@ -26,6 +26,12 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
         public override EncodeBuffer Encode(Object value)
         {
+#if DEBUG
+            if(value == null && !IsNullable)
+            {
+                throw new UnexpectedNullValueException();
+            }
+#endif
             switch (value)
             {
                 case false: return Precomputed.Zero;

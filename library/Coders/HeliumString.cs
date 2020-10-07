@@ -25,9 +25,16 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         public override EncodeBuffer Encode(Object value)
         {
             var v = value as String;
-            if (v == null && IsNullable)
+            if (v == null)
             {
-                return Precomputed.Zero;
+                if (IsNullable)
+                {
+                    return Precomputed.Zero;
+                }
+                else
+                {
+                    throw new UnexpectedNullValueException();
+                }
             }
 
             var length = (UInt64)v.Length;

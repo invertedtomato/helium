@@ -4,7 +4,7 @@ using InvertedTomato.Serialization.HeliumSerialization.Buffers;
 using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 using Xunit;
 
-namespace tests
+namespace InvertedTomato.Serialization.HeliumSerialization
 {
     public class HeliumBooleanTests
     {
@@ -33,7 +33,7 @@ namespace tests
         {
             var coder = new HeliumBoolean(0, false);
             coder.Prepare(typeof(Boolean));
-            Assert.Throws<UnsupportedDataTypeException>(() =>
+            Assert.Throws<UnexpectedNullValueException>(() =>
             {
                 coder.Encode((String)null);
             });

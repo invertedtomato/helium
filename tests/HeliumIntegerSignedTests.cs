@@ -8,7 +8,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
     public class HeliumIntegerSignedTests
     {
         [Fact]
-        public void EncodeZero()
+        public void SignedEncodeZero()
         {
             var coder = new HeliumIntegerSigned(0, false, 1);
             coder.Prepare(typeof(Int32));
@@ -18,7 +18,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeMax()
+        public void SignedEncodeMax()
         {
             var coder = new HeliumIntegerSigned(0, false, 1);
             coder.Prepare(typeof(Int32));
@@ -28,19 +28,19 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeMin()
+        public void SignedEncodeMin()
         {
             var coder = new HeliumIntegerSigned(0, false, 1);
             coder.Prepare(typeof(Int32));
             var encoded = coder.Encode(SignedVlq.MinValue);
 
-            Assert.Equal(SignedVlq.Encode(SignedVlq.MaxValue).ToHexString(), encoded.ToHexString());
+            Assert.Equal(SignedVlq.Encode(SignedVlq.MinValue).ToHexString(), encoded.ToHexString());
         }
 
 
 
         [Fact]
-        public void EncodeNullableZero()
+        public void SignedEncodeNullableZero()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(Int32));
@@ -50,7 +50,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeNullableMax()
+        public void SignedEncodeNullableMax()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(Int32));
@@ -60,7 +60,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeNullableMin()
+        public void SignedEncodeNullableMin()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(Int32));
@@ -70,7 +70,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeNullableNull()
+        public void SignedEncodeNullableNull()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(Int32?));
@@ -80,7 +80,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeIncrement()
+        public void SignedEncodeIncrement()
         {
             var coder = new HeliumIntegerSigned(0, false, 10);
             coder.Prepare(typeof(Int32));
@@ -91,7 +91,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void PrepareUnsupported()
+        public void SignedPrepareUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
                 var coder = new HeliumIntegerSigned(0, false, 10);
@@ -100,7 +100,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void EncodeUnsupported()
+        public void SignedEncodeUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
                 var coder = new HeliumIntegerSigned(0, false, 10);
@@ -111,7 +111,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void DecodeUnsupported()
+        public void SignedDecodeUnsupported()
         {
             Assert.Throws<UnsupportedDataTypeException>(() => {
                 var coder = new HeliumIntegerSigned(0, false, 10);
@@ -122,7 +122,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void DecodeZero()
+        public void SignedDecodeZero()
         {
             var coder = new HeliumIntegerSigned(0, false);
             coder.Prepare(typeof(Int32));
@@ -132,7 +132,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void DecodeMax()
+        public void SignedDecodeMax()
         {
             var coder = new HeliumIntegerSigned(0, false, 1);
             coder.Prepare(typeof(UInt64));
@@ -142,7 +142,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void DecodeMin()
+        public void SignedDecodeMin()
         {
             var coder = new HeliumIntegerSigned(0, false, 1);
             coder.Prepare(typeof(UInt64));
@@ -152,7 +152,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void DecodeNullableZero()
+        public void SignedDecodeNullableZero()
         {
             var coder = new HeliumIntegerSigned(0, true);
             coder.Prepare(typeof(Int32));
@@ -162,7 +162,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void DecodeNullableMax()
+        public void SignedDecodeNullableMax()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(UInt64));
@@ -172,7 +172,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
         }
 
         [Fact]
-        public void DecodeNullableMin()
+        public void SignedDecodeNullableMin()
         {
             var coder = new HeliumIntegerSigned(0, true, 1);
             coder.Prepare(typeof(UInt64));
@@ -183,7 +183,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void DecodeNullableNull()
+        public void SignedDecodeNullableNull()
         {
             var coder = new HeliumIntegerSigned(0, true);
             coder.Prepare(typeof(Int32));
@@ -194,7 +194,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
 
 
         [Fact]
-        public void DecodeIncrement()
+        public void SignedDecodeIncrement()
         {
             var coder = new HeliumIntegerSigned(0, false, 10);
             coder.Prepare(typeof(Int32));

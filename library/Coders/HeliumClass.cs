@@ -5,7 +5,7 @@ using InvertedTomato.Serialization.HeliumSerialization.VariableLengthQuantities;
 
 namespace InvertedTomato.Serialization.HeliumSerialization
 {
-    public class HeliumMap : HeliumCoder
+    public class HeliumClass : HeliumCoder
     {
         private Record[] Records { get; set; }
         private Type UnderlyingType { get; set; }
@@ -16,7 +16,7 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             public HeliumCoder Coder { get; set; }
         }
 
-        public HeliumMap(Byte index, Boolean nullable) : base(index, nullable) { }
+        public HeliumClass(Byte index, Boolean nullable) : base(index, nullable) { }
 
         public override void Prepare(Type underlyingType)
         {
