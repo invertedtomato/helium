@@ -97,6 +97,35 @@ namespace InvertedTomato.Serialization.HeliumSerialization
             Assert.Equal("0D", encoded.ToHexString());
         }
 
+        [Fact]
+        public void PrepareUnsupported()
+        {
+            Assert.Throws<UnsupportedDataTypeException>(() => {
+                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                coder.Prepare(typeof(String));
+            });
+        }
+
+        [Fact]
+        public void EncodeUnsupported()
+        {
+            Assert.Throws<UnsupportedDataTypeException>(() => {
+                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                coder.Prepare(typeof(UInt32));
+                var encoded = coder.Encode("asdf");
+            });
+        }
+
+
+        [Fact]
+        public void DecodeUnsupported()
+        {
+            Assert.Throws<UnsupportedDataTypeException>(() => {
+                var coder = new HeliumIntegerUnsigned(0, false, 20, 10);
+                coder.Prepare(typeof(UInt32));
+                var decoded = coder.Decode(new DecodeBuffer(  new Byte[] { 0,0,0}));
+            });
+        }
 
 
         [Fact]
